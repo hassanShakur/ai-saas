@@ -24,13 +24,13 @@ import { UserAvatar } from '@/components/user-avatar';
 import { BotAvatar } from '@/components/bot-avatar';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
-// import { useProModal } from '@/hooks/use-pro-modal';
+import { useProModal } from '@/hooks/use-pro-modal';
 
 import { formSchema } from './constants';
 import OpenAI from 'openai';
 
 const CodeCompletion = () => {
-  //   const proModal = useProModal();
+    const proModal = useProModal();
   const router = useRouter();
   const [messages, setMessages] = useState<
     OpenAI.Chat.ChatCompletionMessage[]
@@ -70,7 +70,7 @@ const CodeCompletion = () => {
       form.reset();
     } catch (error: any) {
       if (error?.response?.status === 403) {
-        // proModal.onOpen();
+        proModal.onOpen();
       } else {
         if (error?.response?.status === 504) {
           toast.error(

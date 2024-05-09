@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardFooter } from '@/components/ui/card';
-// import { useProModal } from '@/hooks/use-pro-modal';
+import { useProModal } from '@/hooks/use-pro-modal';
 
 import {
   amountOptions,
@@ -39,7 +39,7 @@ import {
 } from './constants';
 
 const ImagePage = () => {
-//   const proModal = useProModal();
+  const proModal = useProModal();
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
 
@@ -68,7 +68,7 @@ const ImagePage = () => {
       form.reset();
     } catch (error: any) {
       if (error?.response?.status === 403) {
-        // proModal.onOpen();
+        proModal.onOpen();
       } else {
         if (error?.response?.status === 504) {
           toast.error(

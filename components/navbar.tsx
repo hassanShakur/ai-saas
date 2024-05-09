@@ -5,7 +5,7 @@ import { MobileSidebar } from '@/components/mobile-sidebar';
 // import { checkSubscription } from '@/lib/subscription';
 
 export const Navbar = async () => {
-//   const apiLimitCount = await getApiLimitCount();
+  // const apiLimitCount = await getApiLimitCount();
 //   const isPro = await checkSubscription();
 
   return (
