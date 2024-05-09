@@ -2,7 +2,7 @@ import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import Configuration, { OpenAI } from 'openai';
 
-// import { increaseApiLimit, checkApiLimit } from '@/lib/api-limit';
+import { increaseApiLimit, checkApiLimit } from '@/lib/api-limit';
 // import { checkSubscription } from '@/lib/subscription';
 
 const configuration = new Configuration({

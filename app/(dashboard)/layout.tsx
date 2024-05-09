@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/navbar';
 import { Sidebar } from '@/components/sidebar';
-// import { getApiLimitCount } from '@/lib/api-limit';
+import { getApiLimitCount } from '@/lib/api-limit';
 // import { checkSubscription } from '@/lib/subscription';
 
 const DashboardLayout = async ({
@@ -8,7 +8,7 @@ const DashboardLayout = async ({
 }: {
   children: React.ReactNode;
 }) => {
-//   const apiLimitCount = await getApiLimitCount();
+  const apiLimitCount = await getApiLimitCount();
 //   const isPro = await checkSubscription();
 
   return (
