@@ -1,6 +1,6 @@
 'use client';
 
-// import axios from 'axios';
+import axios from 'axios';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { MessageSquare } from 'lucide-react';
@@ -8,7 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 // import { ChatCompletionRequestMessage } from 'openai';
-// import { toast } from 'react-hot-toast';
+import { ChatCompletionMessage } from 'openai/resources/index.mjs';
+import { toast } from 'react-hot-toast';
 
 import { Heading } from '@/components/heading';
 import {
@@ -19,21 +20,25 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-// import { Empty } from '@/components/empty';
-// import { Loader } from '@/components/loader';
-// import { UserAvatar } from '@/components/user-avatar';
-// import { BotAvatar } from '@/components/bot-avatar';
+import { Empty } from '@/components/empty';
+import { Loader } from '@/components/loader';
+import { UserAvatar } from '@/components/user-avatar';
+import { BotAvatar } from '@/components/bot-avatar';
 import { cn } from '@/lib/utils';
 // import { useProModal } from '@/hooks/use-pro-modal';
 
 import { formSchema } from './constants';
+import OpenAI from 'openai';
 
 const ConversationPage = () => {
   //   const proModal = useProModal();
   const router = useRouter();
-  //   const [messages, setMessages] = useState<
-  //     ChatCompletionRequestMessage[]
-  //   >([]);
+    const [messages, setMessages] = useState<OpenAI.Chat.ChatCompletionMessage[]>(
+      []
+    );
+    // const [messages, setMessages] = useState<
+    //   ChatCompletionRequestMessage[]
+    // >([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,39 +51,39 @@ const ConversationPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
-    // try {
-    //   const userMessage: ChatCompletionRequestMessage = {
-    //     role: 'user',
-    //     content: values.prompt,
-    //   };
-    //   const newMessages = [...messages, userMessage];
+    try {
+      const userMessage: OpenAI.Chat.ChatCompletionMessageParam = {
+        role: 'user',
+        content: values.prompt,
+      };
+      const newMessages = [...messages, userMessage];
 
-    //   const response = await axios.post('/api/conversation', {
-    //     messages: newMessages,
-    //   });
+      const response = await axios.post('/api/conversation', {
+        messages: newMessages,
+      });
 
-    //   setMessages((current) => [
-    //     ...current,
-    //     userMessage,
-    //     response.data,
-    //   ]);
+      setMessages((current) => [
+        ...current,
+        userMessage,
+        response.data,
+      ]);
 
-    //   form.reset();
-    // } catch (error: any) {
-    //   if (error?.response?.status === 403) {
-    //     proModal.onOpen();
-    //   } else {
-    //     if (error?.response?.status === 504) {
-    //       toast.error(
-    //         'Sorry! The server is currently busy! Kindly try other generations or come back later!'
-    //       );
-    //     } else {
-    //       toast.error('Something else went wrong!');
-    //     }
-    //   }
-    // } finally {
-    //   router.refresh();
-    // }
+      form.reset();
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        // proModal.onOpen();
+      } else {
+        if (error?.response?.status === 504) {
+          toast.error(
+            'Sorry! The server is currently busy! Kindly try other generations or come back later!'
+          );
+        } else {
+          toast.error('Something else went wrong!');
+        }
+      }
+    } finally {
+      router.refresh();
+    }
   };
 
   return (
@@ -122,8 +127,7 @@ const ConversationPage = () => {
           </Form>
         </div>
         <div className='space--y-4 mt-4'>
-          Conversation output will be displayed here.
-          {/* {isLoading && (
+          {isLoading && (
             <div className='p-8 rounded-lg w-full flex items-center justify-center bg-muted'>
               <Loader />
             </div>
@@ -150,7 +154,7 @@ const ConversationPage = () => {
                 <p className='text-sm'>{message.content}</p>
               </div>
             ))}
-          </div> */}
+          </div>
         </div>
       </div>
     </div>
