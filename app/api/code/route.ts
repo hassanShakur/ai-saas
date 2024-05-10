@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import Configuration, { OpenAI } from 'openai';
 
 import { increaseApiLimit, checkApiLimit } from '@/lib/api-limit';
-// import { checkSubscription } from '@/lib/subscription';
+import { checkSubscription } from '@/lib/subscription';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -16,7 +16,8 @@ const openai = new OpenAI({
 // for code generation
 const instructionMessage: OpenAI.Chat.ChatCompletionMessageParam = {
   role: 'system',
-  content: 'You are a code generator AI. Respond to the following prompts with code in markdown format (use comments where necessary).',
+  content:
+    'You are a code generator AI. Respond to the following prompts with code in markdown format (use comments where necessary).',
 };
 
 export async function POST(req: Request) {
@@ -41,27 +42,23 @@ export async function POST(req: Request) {
       });
     }
 
-    // const freeTrial = await checkApiLimit();
-    // const isPro = await checkSubscription();
+    const freeTrial = await checkApiLimit();
+    const isPro = await checkSubscription();
 
-    // if (!freeTrial && !isPro) {
-    //   return new NextResponse('Free trial has expired.', {
-    //     status: 403,
-    //   });
-    // }
+    if (!freeTrial && !isPro) {
+      return new NextResponse('Free trial has expired.', {
+        status: 403,
+      });
+    }
 
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [instructionMessage, ...messages],
     });
-    // const response = await openai.createChatCompletion({
-    //   model: 'gpt-3.5-turbo',
-    //   messages,
-    // });
 
-    // if (!isPro) {
-    //   await increaseApiLimit();
-    // }
+    if (!isPro) {
+      await increaseApiLimit();
+    }
 
     return NextResponse.json(response.choices[0].message);
   } catch (error) {

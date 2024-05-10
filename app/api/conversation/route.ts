@@ -48,10 +48,6 @@ export async function POST(req: Request) {
       model: 'gpt-3.5-turbo',
       messages,
     });
-    // const response = await openai.createChatCompletion({
-    //   model: 'gpt-3.5-turbo',
-    //   messages,
-    // });
 
     if (!isPro) {
       await increaseApiLimit();
