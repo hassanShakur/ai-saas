@@ -139,12 +139,12 @@ const ConversationPage = () => {
                 key={message.content}
                 className={cn(
                   'p-8 w-full flex items-start gap-x-8 rounded-lg',
-                  message.role === 'user'
+                  message.role !== 'assistant'
                     ? 'bg-white border border-black/10'
                     : 'bg-muted'
                 )}
               >
-                {message.role === 'user' ? (
+                {message.role !== 'assistant' ? (
                   <UserAvatar />
                 ) : (
                   <BotAvatar />
