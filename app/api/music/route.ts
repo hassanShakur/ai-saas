@@ -2,8 +2,8 @@ import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import Replicate from 'replicate';
 
-// import { increaseApiLimit, checkApiLimit } from '@/lib/api-limit';
-// import { checkSubscription } from '@/lib/subscription';
+import { increaseApiLimit, checkApiLimit } from '@/lib/api-limit';
+import { checkSubscription } from '@/lib/subscription';
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -23,14 +23,14 @@ export async function POST(req: Request) {
       return new NextResponse('Prompt is required', { status: 400 });
     }
 
-    // const freeTrial = await checkApiLimit();
-    // const isPro = await checkSubscription();
+    const freeTrial = await checkApiLimit();
+    const isPro = await checkSubscription();
 
-    // if (!freeTrial && !isPro) {
-    //   return new NextResponse('Free trial has expired.', {
-    //     status: 403,
-    //   });
-    // }
+    if (!freeTrial && !isPro) {
+      return new NextResponse('Free trial has expired.', {
+        status: 403,
+      });
+    }
 
     const input = {
       prompt_b: prompt,
@@ -41,9 +41,9 @@ export async function POST(req: Request) {
       { input }
     );
 
-    // if (!isPro) {
-    //   await increaseApiLimit();
-    // }
+    if (!isPro) {
+      await increaseApiLimit();
+    }
 
     return NextResponse.json(response);
   } catch (error) {
