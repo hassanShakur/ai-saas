@@ -52,7 +52,7 @@ export async function GET() {
               name: 'Saasy Pro',
               description: 'Unlimited AI Generations',
             },
-            unit_amount: 2000,
+            unit_amount: 5000,
             recurring: {
               interval: 'month',
             },
